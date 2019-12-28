@@ -1,15 +1,20 @@
-var data = {
-  token: "Admin",
-  category: "TestCategory",
-  time: "3:00",
-  value: "TestValu"
-};
-//$.post("http://datat.glitch.me/writeData", data);
+
 var enterButton = document.getElementById("enterBtn")
+var event = new Event('change');
+var token = ""
 enterButton.onclick = function() {
+  var accordion = document.getElementById("accordion")
+  while (accordion.firstChild) {
+    accordion.removeChild(accordion.firstChild);
+  }
+  document.getElementById("categoryInput").value = ""
+  document.getElementById("timeInput").value = ""
+  document.getElementById("valueInput").value = ""
+  document.getElementById("categoryInput").dispatchEvent(event)
+  document.getElementById("timeInput").dispatchEvent(event)
+  document.getElementById("valueInput").dispatchEvent(event)
   function CreateCategory(categoryName, data) {
     var accordion = document.getElementById("accordion")
-
     var categoryButtonCard = document.createElement("div")
     categoryButtonCard.className = "card"
 
@@ -41,6 +46,7 @@ enterButton.onclick = function() {
     function addData(dataToAdd) {
       var dataElement = document.createElement("li")
       dataElement.className = "list-group-item"
+      dataElement.style = "text-align: center;"
       dataElement.innerHTML = dataToAdd
       dataList.appendChild(dataElement)
     }
@@ -62,6 +68,7 @@ enterButton.onclick = function() {
     }
   }
   var userToken = document.getElementById("tokenInput").value 
+  token = userToken
   $.get("http://datat.glitch.me/getData?token=" + userToken, function(response) {
     for (i in response)
     {
@@ -69,5 +76,22 @@ enterButton.onclick = function() {
       var categoryData = response[i]
       CreateCategory(category, categoryData)
     }
+    document.getElementById("formGroup").style = ""
   })
+}
+
+var submitButton = document.getElementById("submitButton")
+submitButton.onclick = function() {
+  var category = document.getElementById("categoryInput").value
+  var time = document.getElementById("timeInput").value
+  var value = document.getElementById("valueInput").value
+  var data = {
+    token: token,
+    category: category,
+    time: time,
+    value: value
+  };
+  $.post("http://datat.glitch.me/writeData", data);
+  document.getElementById("tokenInput").value = token
+  enterButton.click()
 }
