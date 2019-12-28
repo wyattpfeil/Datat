@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Datat</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    />
+    <style>
+      @import url("https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css");
+
+      .jumbotron {
+        color: rgb(255, 255, 255);
+        background-color: rgb(76, 120, 250);
+        font-size: large;
+      }
+      #enterBtn {
+        display: block;
+        margin: 0 auto;
+      }
+      #tokenInput {
+        display: block;
+        margin: 0 auto;
+        width: 20%;
+      }
+
+      #tokenText {
+        display: block;
+        text-align: center;
+        line-height: 150%;
+        font-size: 1.5em;
+      }
+      #enterDataLabel {
+        display: block;
+        text-align: center;
+        line-height: 150%;
+        font-size: 1.5em;
+      }
+      #accordion {
+        margin: 15%;
+        margin-top: 1%;
+        width: 50%;
+      }
+      #formGroup {
+        margin: -15%;
+        margin-top: 1%;
+        width: 50%;
+      }
+
+      #wrapper {
+        display: block;
+        margin: 0 auto;
+        display: flex;
+      }
+
+      #left {
+        flex: 0 0 65%;
+      }
+
+      #right {
+        flex: 1;
+      }
+    </style>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="jumbotron text-center">
+      <h1>Datat</h1>
+      <p>Easily manage any data that changes over time.</p>
+    </div>
+    <form>
+      <div class="form-group">
+        <label id="tokenText">User Token</label>
+        <input
+          id="tokenInput"
+          type="text"
+          class="form-control"
+          id="token"
+          placeholder="Enter User Token"
+        />
+      </div>
+      <button type="button" class="btn btn-primary" id="enterBtn">Enter</button>
+    </form>
+    <div id="wrapper">
+      <div id="left"><div id="accordion"></div></div>
+      <div id="right">
+        <form id="formGroup" style="display:none">
+          <label id="enterDataLabel">Enter Data</label>
+          <div class="form-group">
+            <label for="categoryInput">Category</label>
+            <input
+              type="text"
+              class="form-control"
+              id="categoryInput"
+              placeholder="Enter Category"
+            />
+          </div>
+          <div class="form-group">
+            <label for="timeInput">Time</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="timeInput"
+              placeholder="Time"
+            />
+          </div>
+          <div class="form-group">
+            <label for="valueInput">Value</label>
+            <input
+              type="text"
+              class="form-control"
+              id="valueInput"
+              placeholder="Enter Value"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="display: block;margin: 0 auto;"
+            id="submitButton"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+  <script>
+    var enterButton = document.getElementById("enterBtn");
+    var event = new Event("change");
+    var token = "";
+    enterButton.onclick = function() {
+      var accordion = document.getElementById("accordion");
+      while (accordion.firstChild) {
+        accordion.removeChild(accordion.firstChild);
+      }
+      document.getElementById("categoryInput").value = "";
+      document.getElementById("timeInput").value = "";
+      document.getElementById("valueInput").value = "";
+      document.getElementById("categoryInput").dispatchEvent(event);
+      document.getElementById("timeInput").dispatchEvent(event);
+      document.getElementById("valueInput").dispatchEvent(event);
+      function CreateCategory(categoryName, data) {
+        var accordion = document.getElementById("accordion");
+        var categoryButtonCard = document.createElement("div");
+        categoryButtonCard.className = "card";
+
+        var categoryCardHeader = document.createElement("div");
+        categoryCardHeader.className = "card-header";
+        categoryCardHeader.id = categoryName;
+
+        var mb0 = document.createElement("h5");
+        mb0.className = "mb-0";
+
+        var categoryCollapseButton = document.createElement("button");
+        categoryCollapseButton.style =
+          "width: 100%; background-color: #007bff; color: white;";
+        categoryCollapseButton.className = "btn";
+        categoryCollapseButton.setAttribute("data-toggle", "collapse");
+        categoryCollapseButton.setAttribute(
+          "data-target",
+          "#" + categoryName + "Collapse"
+        );
+        categoryCollapseButton.setAttribute("aria-expanded", "false");
+        categoryCollapseButton.setAttribute(
+          "aria-controls",
+          categoryName + "Collapse"
+        );
+        categoryCollapseButton.innerHTML = categoryName;
+
+        var collapse = document.createElement("div");
+        collapse.id = categoryName + "Collapse";
+        collapse.className = "collapse";
+        collapse.setAttribute("aria-labelledby", "headingOne");
+        collapse.setAttribute("data-parent", "#accordion");
+
+        var dataList = document.createElement("ul");
+        dataList.className = "list-group";
+
+        function addData(dataToAdd) {
+          var dataElement = document.createElement("li");
+          dataElement.className = "list-group-item";
+          dataElement.style = "text-align: center;";
+          dataElement.innerHTML = dataToAdd;
+          dataList.appendChild(dataElement);
+        }
+
+        accordion.appendChild(categoryButtonCard);
+        categoryButtonCard.appendChild(categoryCardHeader);
+        categoryButtonCard.appendChild(collapse);
+        categoryCardHeader.appendChild(mb0);
+        mb0.appendChild(categoryCollapseButton);
+
+        //accordion.appendChild(collapse)
+        collapse.appendChild(dataList);
+        for (i in data) {
+          var time = i;
+          var value = data[i];
+          addData(time + " | " + value);
+        }
+      }
+      var userToken = document.getElementById("tokenInput").value;
+      token = userToken;
+      $.get("http://datat.glitch.me/getData?token=" + userToken, function(
+        response
+      ) {
+        for (i in response) {
+          var category = i;
+          var categoryData = response[i];
+          CreateCategory(category, categoryData);
+        }
+        document.getElementById("formGroup").style = "";
+      });
+    };
+
+    var submitButton = document.getElementById("submitButton");
+    submitButton.onclick = function() {
+      var category = document.getElementById("categoryInput").value;
+      var time = document.getElementById("timeInput").value;
+      var value = document.getElementById("valueInput").value;
+      var data = {
+        token: token,
+        category: category,
+        time: time,
+        value: value
+      };
+      $.post("http://datat.glitch.me/writeData", data);
+      document.getElementById("tokenInput").value = token;
+      enterButton.click();
+    };
+  </script>
+</html>
